@@ -22,6 +22,9 @@ public class CalculoController {
 
     @PostMapping
     public ResponseEntity<?> calcular(@RequestBody Entrada entrada) {
+        // A tipagem do retorno desta função está fraquissima, deveria ser um <Saida>
+        // mas ai os erros teriam que ser tratados com um ExceptionHandler, que não é o foco aqui
+
         try {
             Saida saida = this.calculoService.calcular(entrada);
             return ResponseEntity.ok(saida);
