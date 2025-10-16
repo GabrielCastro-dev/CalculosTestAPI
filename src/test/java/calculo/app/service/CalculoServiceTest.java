@@ -1,5 +1,7 @@
 package calculo.app.service;
 
+import calculo.app.entity.Entrada;
+import calculo.app.entity.Saida;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class CalculoServiceTest {
     @Autowired
     CalculoService calculoService;
+
+    // TESTES UNITÁRIOS
 
     @Test
     void canario01() {
@@ -63,4 +67,52 @@ public class CalculoServiceTest {
         });
     }
 
+    // TESTES DE INTEGRAÇÃO, NO MÉTODO CALCULAR()
+
+    @Test
+    void integracao01_listaValida() {
+        Entrada entrada = new Entrada();
+        entrada.setListaNumeros(List.of(2, 5, 17, 1));
+
+        Saida saida = this.calculoService.calcular(entrada);
+
+        assertEquals(25, saida.getSoma());
+        assertEquals(17, saida.getMaiorNumeroLista());
+    }
+
+    @Test
+    void integracao02_listaNula() {
+        Entrada entrada = new Entrada();
+        entrada.setListaNumeros(null);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            this.calculoService.calcular(entrada);
+        });
+    }
+
+    @Test
+    void integracao03_listaVazia() {
+        Entrada entrada = new Entrada();
+        entrada.setListaNumeros(List.of());
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            this.calculoService.calcular(entrada);
+        });
+    }
+
+    @Test
+    void integracao04_listaComValorNulo() {
+        Entrada entrada = new Entrada();
+
+        List<Integer> lista = new ArrayList<>();
+        lista.add(1);
+        lista.add(null);
+        lista.add(3);
+
+        entrada.setListaNumeros(lista);
+
+        assertThrows(NullPointerException.class, () -> {
+            this.calculoService.calcular(entrada);
+        });
+    }
 }
